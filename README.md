@@ -1,1 +1,5 @@
-# CookieClickerBOT
+# AirBnB---Scraping
+
+Install
+
+pip install -r ./requirements.txt
