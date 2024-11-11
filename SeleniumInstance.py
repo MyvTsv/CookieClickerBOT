@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 import os
 
 class SeleniumInstance:
@@ -14,9 +15,12 @@ class SeleniumInstance:
             if not driver_path:
                 raise ValueError("Le chemin du ChromeDriver doit être défini dans le fichier .env avec 'CHROME_DRIVER_PATH'.")
             service = Service(driver_path)
+            chrome_options = Options()
+            chrome_options.add_argument("--incognito")
+            chrome_options.add_argument("--disable-extensions")
+            chrome_options.add_argument("--no-sandbox")
             cls._driver = webdriver.Chrome(service=service)
             cls._instance = cls()
-
         return cls._instance
 
     def get_driver(self):
