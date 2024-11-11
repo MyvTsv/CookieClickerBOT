@@ -54,9 +54,27 @@ class CookieClicker:
             raise Exception(f"An unexpected error occurred while clicking the cookie: {e}")
         return True
     
+    def get_number_of_cookies(self):
+        try:
+            cookie_count = self._driver.find_element(By.XPATH, "//*[@id='cookies']")
+            return cookie_count.get_attribute("innerText").split()[0].replace(",", "")
+        except NoSuchElementException as e:
+            raise Exception("The cookie count element was not found on the page.") from e
+        except Exception as e:
+            raise Exception(f"An unexpected error occurred while getting the number of cookies: {e}")
+    
+    def cookie_per_second(self):
+        try:
+            cookie_per_second = self._driver.find_element(By.XPATH, "//*[@id='cookies']").text
+            return cookie_per_second.split("par seconde :")[-1].strip()
+        except NoSuchElementException as e:
+            raise Exception("The cookie per second element was not found on the page.") from e
+        except Exception as e:
+            raise Exception(f"An unexpected error occurred while getting the number of cookies per second: {e}")
+    
     def game_is_running(self):
         return self._is_running
-    
+
     def quit_game(self):
         self._is_running = False
         self._driver.quit()
