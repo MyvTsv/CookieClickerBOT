@@ -1,6 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.action_chains import ActionChains
+
 import os
 
 class SeleniumInstance:
@@ -27,3 +32,22 @@ class SeleniumInstance:
         if self._instance is None:
             self.get_instance()
         return self._driver
+
+    def wait_and_get_element(cls, by, value, driver = None) -> WebElement:
+        try:
+            if cls._driver is None:
+                cls.get_instance()
+            if driver is None:
+                driver = cls._driver
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((by, value)))
+            return cls._driver.find_element(by, value)
+        except Exception as e:
+            raise Exception(f"An error occurred while waiting for the element: {e}")
+        
+    def wait_hover_and_get_element(cls, element: WebElement):
+        try:
+            WebDriverWait(cls._driver, 10).until(EC.visibility_of(element))
+            actions = ActionChains(cls._driver)
+            actions.move_to_element(element).perform()
+        except Exception as e:
+            raise Exception(f"An error occurred while waiting for the element to be visible: {e}")
